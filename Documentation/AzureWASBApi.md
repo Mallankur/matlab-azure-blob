@@ -3387,6 +3387,87 @@
 ```
 
 ------
+matlab excess the Containerfile 
+To access the Azure Blob Storage container using a SAS (Shared Access Signature) token in MATLAB and retrieve images or files from folders, you can use the following approach. This code utilizes HTTP requests to access the blob container directly using the provided SAS token.
+
+### MATLAB Code:
+```matlab
+% Define the base URL for the blob container and SAS token
+baseUrl = 'https://blobformatlabfile.blob.core.windows.net/dotnetsvfile/';
+sasToken = 'sp=racwd&st=2024-10-16T06:14:36Z&se=2024-10-16T14:14:36Z&spr=https&sv=2022-11-02&sr=c&sig=GxzuYiGNRoWdp2DfeH5KoerqfIONAJOceJoM0pmWjHk%3D';
+
+% Construct the full URL with SAS token for accessing the container
+urlWithSas = strcat(baseUrl, '?', sasToken);
+
+% Set web options to use for downloading files from the blob storage
+options = weboptions('Timeout', 60, 'ContentType', 'json');
+
+% Fetch the contents of the blob container (list of files and folders)
+blobContainerContent = webread(urlWithSas, options);
+
+% Display the container content (folder/file names)
+disp('Blob Container Content:');
+disp(blobContainerContent);
+
+% If you want to download a specific file, use the following:
+% For example, download a file named 'example.jpg' inside the container
+fileName = 'example.jpg';  % replace with actual file name
+fileUrl = strcat(baseUrl, fileName, '?', sasToken);
+
+% Define the local file path where the downloaded file will be saved
+localFilePath = fullfile(pwd, fileName);
+
+% Download the file to the local machine
+websave(localFilePath, fileUrl);
+
+% Now the file is saved locally, and you can load or display the image
+img = imread(localFilePath);
+imshow(img);
+```
+
+### Explanation:
+1. **Base URL**: This is the URL for your Azure blob container (`dotnetsvfile`).
+2. **SAS Token**: The `sasToken` is added to the base URL to provide access to the container.
+3. **webread**: Retrieves the contents of the blob container (list of files and folders).
+4. **websave**: Downloads a specific file (in this example, an image) from the blob container.
+5. **imread**: Loads the downloaded image into MATLAB.
+6. **imshow**: Displays the image.
+
+### Important Notes:
+- Replace `example.jpg` with the actual file name you want to download.
+- If you have subfolders, you can append the folder path to the file name in `fileUrl` to target files inside subfolders.
+- Make sure you have an active internet connection to access the blob storage.
+
+Let me know if you need further adjustments!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## @TableQuery
